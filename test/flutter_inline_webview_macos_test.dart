@@ -1,4 +1,4 @@
-// import 'package:flutter_inline_webview_macos/flutter_inline_webview_macos.dart';
+// import 'package:flutter_webview_macos/flutter_webview_macos.dart';
 // import 'package:flutter_test/flutter_test.dart';
 // import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 

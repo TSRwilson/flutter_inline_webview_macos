@@ -1,6 +1,6 @@
 //
 //  WebView.swift
-//  flutter_inline_webview_macos
+//  flutter_webview_macos
 //
 //  Created by redstar16 on 2022/08/18.
 //
@@ -16,9 +16,7 @@ public class InAppWebViewMacos: WKWebView
 
    @objc(userContentController:didReceiveScriptMessage:)
     public func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
-        if message.name == "menumizPosChannel" {
-            channel?.invokeMethod("onReceivedData", arguments: message.body as! String)
-        }
+        channel?.invokeMethod("onReceivedData", arguments: message.body as! String)
     }
 
   var windowId: Int64?
@@ -29,7 +27,7 @@ public class InAppWebViewMacos: WKWebView
 init(frame: CGRect, configuration: WKWebViewConfiguration, channel: FlutterMethodChannel?) {
         super.init(frame: frame, configuration: configuration)
         self.channel = channel
-        configuration.userContentController.add(self, name: "menumizPosChannel")
+         self.navigationDelegate = self // Assigning self as the navigation delegate
     }
 
   required public init(coder aDecoder: NSCoder) {
@@ -48,6 +46,8 @@ init(frame: CGRect, configuration: WKWebViewConfiguration, channel: FlutterMetho
       }
     }
   }
+    
+    
 
   public func canGoBackOrForward(steps: Int) -> Bool {
     let currentIndex = self.backForwardList.backList.count
@@ -57,16 +57,18 @@ init(frame: CGRect, configuration: WKWebViewConfiguration, channel: FlutterMetho
   }
 
   public func loadUrl(urlRequest: URLRequest, allowingReadAccessTo: URL?) {
-    let url = urlRequest.url!
+      let url = urlRequest.url!
 
-    if #available(iOS 9.0, *), let allowingReadAccessTo = allowingReadAccessTo,
-      url.scheme == "file", allowingReadAccessTo.scheme == "file"
-    {
-      loadFileURL(url, allowingReadAccessTo: allowingReadAccessTo)
-    } else {
-      load(urlRequest)
+         // Print the URL before loading
+         print("Loading URL: \(url.absoluteString)")
 
-    }
+         if #available(iOS 9.0, *), let allowingReadAccessTo = allowingReadAccessTo,
+             url.scheme == "file", allowingReadAccessTo.scheme == "file"
+         {
+             loadFileURL(url, allowingReadAccessTo: allowingReadAccessTo)
+         } else {
+             load(urlRequest)
+         }
   }
 
   public func loadData(
@@ -113,11 +115,15 @@ init(frame: CGRect, configuration: WKWebViewConfiguration, channel: FlutterMetho
     _ webView: WKWebView, 
     didStartProvisionalNavigation navigation: WKNavigation!
 ) {
-    onLoadStart(url: webView.url?.absoluteString)
+    onLoadStart(url: webView.url?.absoluteString as String?)
 }
 public func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
-  print(webView.url?.absoluteString)
-    onLoadStop(url: webView.url?.absoluteString)
+    if let url = webView.url {
+        print("load finish URL: \(url.absoluteString)")
+          onLoadStop(url: url.absoluteString)
+    } else {
+        print("URL is nil")
+    }
 }
 
  public func webView(
@@ -125,8 +131,34 @@ public func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
     didFailProvisionalNavigation navigation: WKNavigation!,
     withError error: Error
 ) {
+    print("Failed to load URL: \(view.url?.absoluteString ?? "Unknown")")
+       print("Error: \(error.localizedDescription)")
     onLoadError(url: view.url?.absoluteString, error: error)
 }
+    
+    public  func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
+        print("Failed during loading: \(error.localizedDescription)")
+        onLoadError(url: webView.url?.absoluteString, error: error)
+    }
+    
+    public func webView(_ webView: WKWebView, decidePolicyFor navigationResponse: WKNavigationResponse, decisionHandler: @escaping (WKNavigationResponsePolicy) -> Void) {
+        if let httpResponse = navigationResponse.response as? HTTPURLResponse {
+            let statusCode = httpResponse.statusCode
+            let description = httpResponse.description
+            print("HTTP Status Code: \(statusCode)")
+            if (statusCode != 200) {
+                onLoadHttpError(url: webView.url?.absoluteString, statusCode: statusCode, description: description)
+            }
+            decisionHandler(.allow)
+        } else {
+            decisionHandler(.allow)
+        }
+    }
+    
+    public func webView(_ webView: WKWebView, webContentProcessDidTerminate webContentView: WKWebView) {
+        print("Web content process terminated. Reloading...")
+        webView.reload()
+    }
 
   public func webViewDidClose(_ webView: WKWebView) {
     let arguments: [String: Any?] = [:]
@@ -141,6 +173,8 @@ public func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
   public func onLoadStop(url: String?) {
     let arguments: [String: Any?] = ["url": url]
     channel?.invokeMethod("onLoadStop", arguments: arguments)
+      
+     
   }
 
   public func onLoadError(url: String?, error: Error) {
@@ -156,6 +190,21 @@ public func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
     ]
     channel?.invokeMethod("onLoadHttpError", arguments: arguments)
   }
+    
+    public func channelName (channelName : String?) {
+        configuration.userContentController.add(self, name: channelName!)
+    }
+
+    public func runJavaScriptWithResult (script : String?) {
+       evaluateJavaScript(script!, completionHandler: { (result, error) in
+          if let error = error {
+              print("Error evaluating JavaScript: \(error.localizedDescription)")
+          } else {
+              print("JavaScript result: \(String(describing: result))")
+          }
+      })
+    }
+  
 
   public func getOriginalUrl() -> URL? {
     return currentOriginalUrl

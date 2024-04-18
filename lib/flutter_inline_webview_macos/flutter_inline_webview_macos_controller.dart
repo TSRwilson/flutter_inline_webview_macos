@@ -233,6 +233,18 @@ class InlineWebViewMacOsController {
     await _channel.invokeMethod<void>('stopLoading', defaultArgs);
   }
 
+  Future<void> channelName({required String channelName}) async {
+    final args = {
+      'channelName': channelName
+    }; // Simple Map for passing arguments
+    await _channel.invokeMethod<void>('channelName', args);
+  }
+
+  Future<void> runJavascript({required String script}) async {
+    final args = {'script': script}; // Simple Map for passing arguments
+    await _channel.invokeMethod<void>('script', args);
+  }
+
   ///Clears all the WebView's cache.
   ///
   ///**Supported Platforms/Implementations**:

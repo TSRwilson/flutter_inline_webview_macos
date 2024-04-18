@@ -1,6 +1,6 @@
 //
 //  MethodHandler.swift
-//  flutter_inline_webview_macos
+//  flutter_webview_macos
 //
 //  Created by redstar16 on 2022/08/18.
 //
@@ -71,7 +71,24 @@ public class InAppWebViewMacosMethodHandler: FlutterMethodCallDelegate {
     case "getUrl":
       let url = controller!.webView!.getOriginalUrl()
       result(url?.baseURL)
-
+    case "channelName":
+        if let args = arguments,
+              let channelName = args["channelName"] as? String {
+               // Call the function or method that requires a String argument
+               controller?.webView?.channelName(channelName: channelName)
+           } else {
+               print("Error: channelName is not a string or arguments are not valid.")
+           }
+    break;
+      case "script":
+        if let args = arguments,
+              let script = args["script"] as? String {
+               // Call the function or method that requires a String argument
+               controller?.webView?.runJavaScriptWithResult(script: script)
+           } else {
+               print("Error: script is not a string or arguments are not valid.")
+           }
+    break;
     default:
       result(FlutterMethodNotImplemented)
     }
