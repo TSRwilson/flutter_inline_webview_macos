@@ -10,30 +10,28 @@ import FlutterMacOS
 import Foundation
 
 public class FlutterWebViewMacosFactory: NSObject, FlutterPlatformViewFactory {
-  private var registrar: FlutterPluginRegistrar?
+    private var registrar: FlutterPluginRegistrar?
 
-  init(registrar: FlutterPluginRegistrar?) {
-    super.init()
-    self.registrar = registrar
-  }
-
-  public func create(
-    withViewIdentifier viewId: Int64,
-    arguments args: Any?
-  )
-    -> NSView
-  {
-    let webviewController = FlutterWebViewMacosController(
-      registrar: registrar!,
-      viewIdentifier: viewId
-    )
-      return webviewController
-  }
-
-    public func createArgsCodec() -> FlutterMessageCodec & NSObjectProtocol {
-      return FlutterStandardMessageCodec.sharedInstance()
+    init(registrar: FlutterPluginRegistrar?) {
+        super.init()
+        self.registrar = registrar
     }
 
-  deinit {
-  }
+    public func create(
+        withViewIdentifier viewId: Int64,
+        arguments args: Any?
+    ) -> NSView {
+        let webviewController = FlutterWebViewMacosController(
+            registrar: registrar!,
+            viewIdentifier: viewId
+        )
+        return webviewController
+    }
+
+   public func createArgsCodec() -> (FlutterMessageCodec & NSObjectProtocol)? {
+        return FlutterStandardMessageCodec.sharedInstance()
+    }
+
+    deinit {
+    }
 }
