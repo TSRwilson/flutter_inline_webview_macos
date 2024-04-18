@@ -91,9 +91,17 @@ class InlineWebViewMacOsController {
           }
         }
         break;
+      case 'onReceivedData':
+        if (_webView != null && _webView!.onReceivedData != null) {
+          final message = call.arguments;
+          if (_webView != null && _webView!.onReceivedData != null) {
+            _webView!.onReceivedData!(this, message);
+          }
+        }
+        break;
       default:
-        // print(call.method);
-        // print('Error:InAppWebViewController');
+      // print(call.method);
+      // print('Error:InAppWebViewController');
     }
   }
 
@@ -136,7 +144,7 @@ class InlineWebViewMacOsController {
   Future<void> loadUrl({
     required URLRequest urlRequest,
     @Deprecated('Use `allowingReadAccessTo` instead')
-        Uri? iosAllowingReadAccessTo,
+    Uri? iosAllowingReadAccessTo,
     Uri? allowingReadAccessTo,
   }) async {
     assert(urlRequest.url != null && urlRequest.url.toString().isNotEmpty);

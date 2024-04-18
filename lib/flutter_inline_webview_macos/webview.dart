@@ -3,15 +3,15 @@ import 'package:flutter_inline_webview_macos/flutter_inline_webview_macos/types.
 
 ///Abstract class that represents a WebView. Used by [InAppWebView] and [HeadlessInAppWebView].
 abstract class WebView {
-  WebView({
-    this.windowId,
-    this.onWebViewCreated,
-    this.initialUrlRequest,
-    this.onLoadStart,
-    this.onLoadStop,
-    this.onLoadError,
-    this.onLoadHttpError,
-  });
+  WebView(
+      {this.windowId,
+      this.onWebViewCreated,
+      this.initialUrlRequest,
+      this.onLoadStart,
+      this.onLoadStop,
+      this.onLoadError,
+      this.onLoadHttpError,
+      this.onReceivedData});
 
   ///The window id of a [CreateWindowAction.windowId].
   final int? windowId;
@@ -49,6 +49,9 @@ abstract class WebView {
     int statusCode,
     String description,
   )? onLoadHttpError;
+
+  final void Function(InlineWebViewMacOsController controller, String? message)?
+      onReceivedData;
 
   ///Initial url request that will be loaded.
   ///

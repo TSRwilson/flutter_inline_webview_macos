@@ -7,20 +7,21 @@ import 'package:flutter_inline_webview_macos/flutter_inline_webview_macos/types.
 import 'package:flutter_inline_webview_macos/flutter_inline_webview_macos/webview.dart';
 
 class InlineWebViewMacOs extends StatefulWidget implements WebView {
-  const InlineWebViewMacOs({
-    Key? key,
-    required this.width,
-    required this.height,
-    this.controller,
-    this.windowId,
-    this.onWebViewCreated,
-    this.initialUrlRequest,
-    this.onLoadStart,
-    this.onLoadStop,
-    this.onLoadError,
-    this.onLoadHttpError,
-    this.gestureRecognizers,
-  }) : super(key: key);
+  const InlineWebViewMacOs(
+      {Key? key,
+      required this.width,
+      required this.height,
+      this.controller,
+      this.windowId,
+      this.onWebViewCreated,
+      this.initialUrlRequest,
+      this.onLoadStart,
+      this.onLoadStop,
+      this.onLoadError,
+      this.onLoadHttpError,
+      this.gestureRecognizers,
+      this.onReceivedData})
+      : super(key: key);
 
   @override
   final URLRequest? initialUrlRequest;
@@ -32,9 +33,14 @@ class InlineWebViewMacOs extends StatefulWidget implements WebView {
   @override
   final void Function(InlineWebViewMacOsController controller, Uri? url)?
       onLoadStart;
+
   @override
   final void Function(InlineWebViewMacOsController controller, Uri? url)?
       onLoadStop;
+
+  @override
+  final void Function(InlineWebViewMacOsController controller, String? message)?
+      onReceivedData;
 
   @override
   final void Function(

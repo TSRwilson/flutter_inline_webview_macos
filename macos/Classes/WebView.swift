@@ -10,26 +10,27 @@ import Foundation
 import WebKit
 
 public class InAppWebViewMacos: WKWebView
-//, WKUIDelegate, WKNavigationDelegate,
-//  WKScriptMessageHandler
+, WKUIDelegate, WKNavigationDelegate,
+  WKScriptMessageHandler
 {
 
-  public func userContentController(
-    _ userContentController: WKUserContentController, didReceive message: WKScriptMessage
-  ) {
-  }
+   @objc(userContentController:didReceiveScriptMessage:)
+    public func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
+        if message.name == "menumizPosChannel" {
+            channel?.invokeMethod("onReceivedData", arguments: message.body as! String)
+        }
+    }
 
   var windowId: Int64?
   var windowCreated = false
   var channel: FlutterMethodChannel?
   var currentOriginalUrl: URL?
 
-  init(frame: CGRect, configuration: WKWebViewConfiguration, channel: FlutterMethodChannel?) {
-    super.init(frame: frame, configuration: configuration)
-    self.channel = channel
-//    uiDelegate = self
-//    navigationDelegate = self
-  }
+init(frame: CGRect, configuration: WKWebViewConfiguration, channel: FlutterMethodChannel?) {
+        super.init(frame: frame, configuration: configuration)
+        self.channel = channel
+        configuration.userContentController.add(self, name: "menumizPosChannel")
+    }
 
   required public init(coder aDecoder: NSCoder) {
     super.init(coder: aDecoder)!
@@ -108,21 +109,24 @@ public class InAppWebViewMacos: WKWebView
     }
   }
 
-  public func webView(
-    _ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!
-  ) {
+ public func webView(
+    _ webView: WKWebView, 
+    didStartProvisionalNavigation navigation: WKNavigation!
+) {
+    onLoadStart(url: webView.url?.absoluteString)
+}
+public func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+  print(webView.url?.absoluteString)
+    onLoadStop(url: webView.url?.absoluteString)
+}
 
-    currentOriginalUrl = url
-    onLoadStart(url: url?.absoluteString)
-  }
-
-  public func webView(
+ public func webView(
     _ view: WKWebView,
     didFailProvisionalNavigation navigation: WKNavigation!,
     withError error: Error
-  ) {
-    webView(view, didFailProvisionalNavigation: navigation, withError: error)
-  }
+) {
+    onLoadError(url: view.url?.absoluteString, error: error)
+}
 
   public func webViewDidClose(_ webView: WKWebView) {
     let arguments: [String: Any?] = [:]
