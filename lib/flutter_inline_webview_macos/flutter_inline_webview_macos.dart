@@ -78,13 +78,13 @@ class InlineWebViewMacOsState extends State<InlineWebViewMacOs> {
 
   @override
   Widget build(BuildContext context) {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      // size change listen
-      if (_size != null && _key.currentContext?.size != _size) {
-        _controller.changeSize(_size!);
-        _size = _key.currentContext?.size;
-      }
-    });
+    // WidgetsBinding.instance.addPostFrameCallback((_) {
+    // size change listen
+    //   if (_size != null && _key.currentContext?.size != _size) {
+    //     _controller.changeSize(_size!);
+    //     _size = _key.currentContext?.size;
+    //   }
+    // });
 
     if (defaultTargetPlatform == TargetPlatform.macOS) {
       return SizedBox(
@@ -122,9 +122,9 @@ class InlineWebViewMacOsState extends State<InlineWebViewMacOs> {
   }
 
   void _onPlatformViewCreated(int id) {
-    _size = _key.currentContext?.size ?? const Size(0, 0);
-    _controller =
-        InlineWebViewMacOsController(id: id, webView: widget, size: _size!);
+    // _size = _key.currentContext?.size ?? const Size(0, 0);
+    _controller = InlineWebViewMacOsController(
+        id: id, webView: widget, size: const Size(800, 600));
     if (widget.onWebViewCreated != null) {
       widget.onWebViewCreated!(_controller);
     }

@@ -2,6 +2,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_inline_webview_macos/flutter_inline_webview_macos/types.dart';
 import 'package:flutter_inline_webview_macos/flutter_inline_webview_macos/webview.dart';
 
+
+
 class InlineWebViewMacOsController {
   InlineWebViewMacOsController({
     required dynamic id,
