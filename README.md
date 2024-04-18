@@ -22,6 +22,8 @@ Contribute please! [github issues](https://github.com/akaboshinit/flutter_inline
 
 If you have any requests or questions, please feel free to ask on [github](https://github.com/akaboshinit/flutter_inline_webview_macos/issues)
 
+post message from site to webview
+-"window.webkit.messageHandlers.testMessage.postMessage('testing post message')
 
 ***
 
