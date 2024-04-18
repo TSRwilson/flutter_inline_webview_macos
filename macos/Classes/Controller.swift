@@ -58,14 +58,14 @@ public class FlutterWebViewMacosController: NSView {
       methodCallDelegate = InAppWebViewMacosMethodHandler(controller: self)
       channel!.setMethodCallHandler(methodCallDelegate!.handle)
 
-      // super.autoresizesSubviews = true
-      // super.autoresizingMask = [.height, .width]
+       super.autoresizesSubviews = true
+       super.autoresizingMask = [.height, .width]
 
-      // webView!.autoresizesSubviews = true
-      // webView!.autoresizingMask = [.height, .width]
+       webView!.autoresizesSubviews = true
+       webView!.autoresizingMask = [.height, .width]
 
       // super.layer?.backgroundColor = NSColor.red.cgColor
-      // super.frame = frame
+       super.frame = frame
       super.addSubview(webView!)
 
       webView!.windowCreated = true
