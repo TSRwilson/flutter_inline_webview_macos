@@ -34,18 +34,31 @@ public class InAppWebViewMacosMethodHandler: FlutterMethodCallDelegate {
 
     switch call.method {
     case "create":
-      let height = arguments!["height"] as! Int
-      let width = arguments!["width"] as! Int
-      let frame = CGRect(x: 0, y: 0, width: width, height: height)
+      let frame = CGRect(x: 0, y: 0, width: 800, height: 600)
       controller!.create(frame: frame)
       result(true)
 
     case "changeSize":
-      let height = arguments!["height"] as! Int
-      let width = arguments!["width"] as! Int
-      let frame = CGRect(x: 0, y: 0, width: width, height: height)
-      controller!.changeSize(frame: frame)
-      result(true)
+    do {
+    var height = 800
+    var width = 600
+    
+    if let heightValue = arguments?["height"] as? Int {
+        height = heightValue
+    }
+    
+    if let widthValue = arguments?["width"] as? Int {
+        width = widthValue
+    }
+    
+    let frame = CGRect(x: 0, y: 0, width: width, height: height)
+    controller?.changeSize(frame: frame)
+    
+    result(true)
+} catch {
+    // Handle error
+    print("An error occurred: \(error)")
+}
 
     case "dispose":
       controller!.dispose()

@@ -33,8 +33,6 @@ class _MyAppState extends State<MyApp> {
         body: _hide
             ? InlineWebViewMacOs(
                 key: widget.key,
-                width: double.infinity,
-                height: double.infinity,
                 onLoadStop: (controller, url) {
                   log("onLoadStop $url");
                   _controller!

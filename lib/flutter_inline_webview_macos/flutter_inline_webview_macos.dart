@@ -9,8 +9,7 @@ import 'package:flutter_inline_webview_macos/flutter_inline_webview_macos/webvie
 class InlineWebViewMacOs extends StatefulWidget implements WebView {
   const InlineWebViewMacOs(
       {Key? key,
-      required this.width,
-      required this.height,
+     
       this.controller,
       this.windowId,
       this.onWebViewCreated,
@@ -61,8 +60,6 @@ class InlineWebViewMacOs extends StatefulWidget implements WebView {
   ///The window id of a [CreateWindowAction.windowId].
   @override
   final int? windowId;
-  final double width;
-  final double height;
   final InlineWebViewMacOsController? controller;
 
   final Set<Factory<OneSequenceGestureRecognizer>>? gestureRecognizers;
@@ -87,21 +84,17 @@ class InlineWebViewMacOsState extends State<InlineWebViewMacOs> {
     // });
 
     if (defaultTargetPlatform == TargetPlatform.macOS) {
-      return SizedBox(
-        height: widget.height,
-        width: widget.width,
-        child: AppKitView(
-          key: _key,
-          viewType: 'dev.akaboshinit/flutter_inline_webview_macos',
-          onPlatformViewCreated: _onPlatformViewCreated,
-          gestureRecognizers: widget.gestureRecognizers,
-          creationParams: <String, dynamic>{
-            'args': 'test',
-            'initialUrlRequest': widget.initialUrlRequest?.toMap(),
-            'windowId': widget.windowId,
-          },
-          creationParamsCodec: const StandardMessageCodec(),
-        ),
+      return AppKitView(
+        key: _key,
+        viewType: 'dev.akaboshinit/flutter_inline_webview_macos',
+        onPlatformViewCreated: _onPlatformViewCreated,
+        gestureRecognizers: widget.gestureRecognizers,
+        creationParams: <String, dynamic>{
+          'args': 'test',
+          'initialUrlRequest': widget.initialUrlRequest?.toMap(),
+          'windowId': widget.windowId,
+        },
+        creationParamsCodec: const StandardMessageCodec(),
       );
     }
 
