@@ -55,10 +55,7 @@ public class InAppWebViewMacosMethodHandler: FlutterMethodCallDelegate {
     controller?.changeSize(frame: frame)
     
     result(true)
-} catch {
-    // Handle error
-    print("An error occurred: \(error)")
-}
+} 
 
     case "dispose":
       controller!.dispose()
