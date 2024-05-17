@@ -81,6 +81,9 @@ public class InAppWebViewMacosMethodHandler: FlutterMethodCallDelegate {
     case "getUrl":
       let url = controller!.webView!.getOriginalUrl()
       result(url?.baseURL)
+    case "refresh":
+              self.refresh()
+              result(nil)
     case "channelName":
         if let args = arguments,
               let channelName = args["channelName"] as? String {
@@ -99,6 +102,9 @@ public class InAppWebViewMacosMethodHandler: FlutterMethodCallDelegate {
                print("Error: script is not a string or arguments are not valid.")
            }
     break;
+    case "reload":
+       controller?.webView?.reload()
+    break;
     default:
       result(FlutterMethodNotImplemented)
     }
@@ -107,6 +113,10 @@ public class InAppWebViewMacosMethodHandler: FlutterMethodCallDelegate {
   public func dispose() {
       controller = nil
   }
+    
+    public func refresh() {
+          controller?.webView?.reload()
+       }
 
   deinit {
     dispose()

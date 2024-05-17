@@ -247,6 +247,8 @@ class InlineWebViewMacOsController {
     await _channel.invokeMethod<void>('script', args);
   }
 
+  
+
   ///Clears all the WebView's cache.
   ///
   ///**Supported Platforms/Implementations**:

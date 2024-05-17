@@ -177,6 +177,8 @@ public func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
      
   }
 
+  
+
   public func onLoadError(url: String?, error: Error) {
     let arguments: [String: Any?] = [
       "url": url, "code": error._code, "message": error.localizedDescription,
