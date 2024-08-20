@@ -37,8 +37,8 @@ class _MyAppState extends State<MyApp> {
                   log("onLoadStop $url");
                   _controller!
                       .runJavascript(script: "TriggerPosApp('macos1.1')");
-                         _controller!
-                      .reload();
+              
+               
                 },
                 onReceivedData: (controller, message) {
                   log("onReceivedData $message");

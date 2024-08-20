@@ -28,6 +28,7 @@ init(frame: CGRect, configuration: WKWebViewConfiguration, channel: FlutterMetho
         super.init(frame: frame, configuration: configuration)
         self.channel = channel
          self.navigationDelegate = self // Assigning self as the navigation delegate
+         self.uiDelegate = self
     }
 
   required public init(coder aDecoder: NSCoder) {
@@ -121,10 +122,26 @@ public func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
     if let url = webView.url {
         print("load finish URL: \(url.absoluteString)")
           onLoadStop(url: url.absoluteString)
+          self.runJavaScriptWithResult(script: "TriggerPosApp('macos1.1')")
     } else {
         print("URL is nil")
     }
 }
+  public func webView(_ webView: WKWebView, runOpenPanelWith parameters: WKOpenPanelParameters, initiatedByFrame frame: WKFrameInfo, completionHandler: @escaping ([URL]?) -> Void) {
+        print("runOpenPanelWith triggered") // Add this line for debugging
+
+        let panel = NSOpenPanel()
+        panel.allowsMultipleSelection = parameters.allowsMultipleSelection
+        panel.canChooseDirectories = parameters.allowsDirectories
+        panel.canChooseFiles = true
+        panel.begin { result in
+            if result == .OK {
+                completionHandler(panel.urls)
+            } else {
+                completionHandler(nil)
+            }
+        }
+    }
 
  public func webView(
     _ view: WKWebView,
